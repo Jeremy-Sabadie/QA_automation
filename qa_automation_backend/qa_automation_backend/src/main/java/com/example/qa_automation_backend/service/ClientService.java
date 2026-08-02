@@ -1,66 +1,96 @@
 package com.example.qa_automation_backend.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.stereotype.Service;
 
 import com.example.qa_automation_backend.entity.Client;
 import com.example.qa_automation_backend.repository.ClientRepository;
 
 
 /**
- * Tests unitaires de la couche Service Client.
+ * Service métier responsable de la gestion des clients.
  *
- * Ces tests suivent une approche TDD :
- * le comportement attendu est défini avant
- * l'implémentation réelle du service.
+ * Cette couche contient la logique métier de l'application.
+ * Elle communique avec le repository afin d'accéder aux données.
  *
- * Le repository est mocké afin de tester uniquement
- * la logique métier du service sans dépendre de MariaDB.
+ * L'injection par constructeur facilite les tests unitaires
+ * avec des mocks Mockito.
+ *
+ * @author Jérémy Sabadie
  */
-class ClientServiceTest {
+@Service
+public class ClientService {
 
 
-    @Test
-    void shouldReturnAllClients() {
-
-        // GIVEN
-        // Création d'un repository simulé
-        ClientRepository clientRepository = Mockito.mock(ClientRepository.class);
-
-
-        // Création des données de test
-        Client client = new Client();
-
-        client.setFirstName("Jérémy");
-        client.setLastName("Sabadie");
-        client.setEmail("jeremy@test.com");
-
-
-        List<Client> clients = List.of(client);
-
-
-        // Le repository doit retourner cette liste
-        when(clientRepository.findAll())
-                .thenReturn(clients);
+    private final ClientRepository clientRepository;
 
 
 
-        // WHEN
-        // L'appel au service sera ajouté après création
-        // de ClientService avec injection du repository
+    /**
+     * Injection du repository client.
+     *
+     * @param clientRepository repository permettant l'accès aux clients
+     */
+    public ClientService(ClientRepository clientRepository) {
+
+        this.clientRepository = clientRepository;
+    }
 
 
 
-        // THEN
-        // Vérification du comportement attendu
-        assertThat(clients)
-                .hasSize(1)
-                .contains(client);
+
+    /**
+     * Recherche et retourne tous les clients enregistrés.
+     *
+     * @return liste complète des clients
+     */
+    public List<Client> findAll() {
+
+        return clientRepository.findAll();
+    }
+
+
+
+
+    /**
+     * Recherche un client par son identifiant.
+     *
+     * @param id identifiant du client
+     * @return client trouvé ou vide si inexistant
+     */
+    public Optional<Client> findById(Long id) {
+
+        return clientRepository.findById(id);
+    }
+
+
+
+
+    /**
+     * Enregistre un nouveau client ou met à jour
+     * un client existant.
+     *
+     * @param client client à sauvegarder
+     * @return client sauvegardé
+     */
+    public Client save(Client client) {
+
+        return clientRepository.save(client);
+    }
+
+
+
+
+    /**
+     * Supprime un client par son identifiant.
+     *
+     * @param id identifiant du client à supprimer
+     */
+    public void deleteById(Long id) {
+
+        clientRepository.deleteById(id);
     }
 
 }
