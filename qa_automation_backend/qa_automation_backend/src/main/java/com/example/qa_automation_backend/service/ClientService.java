@@ -13,10 +13,10 @@ import com.example.qa_automation_backend.repository.ClientRepository;
  * Service métier responsable de la gestion des clients.
  *
  * Cette couche contient la logique métier de l'application.
- * Elle communique avec le repository afin d'accéder aux données.
+ * Elle fait le lien entre le contrôleur REST et la couche repository.
  *
  * L'injection par constructeur facilite les tests unitaires
- * avec des mocks Mockito.
+ * avec Mockito.
  *
  * @author Jérémy Sabadie
  */
@@ -27,24 +27,20 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
 
-
     /**
      * Injection du repository client.
      *
-     * @param clientRepository repository permettant l'accès aux clients
+     * @param clientRepository repository permettant l'accès aux données clients
      */
     public ClientService(ClientRepository clientRepository) {
-
         this.clientRepository = clientRepository;
     }
 
 
-
-
     /**
-     * Recherche et retourne tous les clients enregistrés.
+     * Retourne la liste complète des clients.
      *
-     * @return liste complète des clients
+     * @return liste des clients
      */
     public List<Client> findAll() {
 
@@ -52,13 +48,11 @@ public class ClientService {
     }
 
 
-
-
     /**
      * Recherche un client par son identifiant.
      *
      * @param id identifiant du client
-     * @return client trouvé ou vide si inexistant
+     * @return client trouvé ou Optional vide
      */
     public Optional<Client> findById(Long id) {
 
@@ -66,13 +60,10 @@ public class ClientService {
     }
 
 
-
-
     /**
-     * Enregistre un nouveau client ou met à jour
-     * un client existant.
+     * Création ou modification d'un client.
      *
-     * @param client client à sauvegarder
+     * @param client client à enregistrer
      * @return client sauvegardé
      */
     public Client save(Client client) {
@@ -81,10 +72,8 @@ public class ClientService {
     }
 
 
-
-
     /**
-     * Supprime un client par son identifiant.
+     * Suppression d'un client.
      *
      * @param id identifiant du client à supprimer
      */

@@ -1,8 +1,11 @@
 package com.example.qa_automation_backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,21 +23,27 @@ import com.example.qa_automation_backend.repository.ClientRepository;
 
 
 /**
- * Tests unitaires de la couche ClientService.
+ * Tests unitaires de la couche Service Client.
  *
- * Objectif :
- * Vérifier que la logique métier du service client
- * fonctionne indépendamment de la base de données.
+ * Le repository est simulé avec Mockito afin de tester
+ * uniquement la logique métier du service.
  *
- * Le repository est mocké afin de contrôler les réponses
- * retournées par la couche persistence.
+ * Scénarios testés :
+ * - récupération de tous les clients
+ * - recherche par identifiant
+ * - sauvegarde
+ * - suppression
+ *
+ * @author Jérémy Sabadie
  */
 @ExtendWith(MockitoExtension.class)
 class ClientServiceTest {
 
 
+
     @Mock
     private ClientRepository clientRepository;
+
 
 
     @InjectMocks
@@ -47,47 +56,47 @@ class ClientServiceTest {
 
 
     /**
-     * Préparation des données communes utilisées
-     * dans les différents scénarios de test.
+     * Initialisation des données utilisées dans les tests.
      */
     @BeforeEach
-    void setup() {
+    void setUp() {
+
 
         client = new Client();
 
         client.setId(1L);
-        client.setFirstName("Jean");
-        client.setLastName("Dupont");
-        client.setEmail("jean.dupont@test.com");
-        client.setCity("Bordeaux");
+        client.setFirstName("Jeremy");
+        client.setLastName("Sabadie");
+        client.setEmail("jeremy.service@test.com");
+        client.setBirthDate(
+                LocalDate.of(1987, 1, 1)
+        );
+
     }
 
 
 
-
     /**
-     * Vérifie que le service retourne la liste
-     * complète des clients fournie par le repository.
+     * Vérifie la récupération de tous les clients.
      */
     @Test
     void shouldFindAllClients() {
 
 
-        // Given : le repository retourne deux clients
         when(clientRepository.findAll())
-                .thenReturn(Arrays.asList(client, client));
+                .thenReturn(Arrays.asList(client));
 
 
-        // When : appel du service
-        List<Client> clients = clientService.findAll();
+        List<Client> result =
+                clientService.findAll();
 
 
+        assertThat(result)
+                .hasSize(1);
 
-        // Then : vérification du résultat
-        assertThat(clients)
-                .isNotNull()
-                .hasSize(2);
 
+        assertThat(result.get(0).getEmail())
+                .isEqualTo("jeremy.service@test.com");
 
 
         verify(clientRepository, times(1))
@@ -97,29 +106,27 @@ class ClientServiceTest {
 
 
 
-
     /**
-     * Vérifie la recherche d'un client par son identifiant.
+     * Vérifie la recherche d'un client par ID.
      */
     @Test
     void shouldFindClientById() {
 
 
-        // Given
         when(clientRepository.findById(1L))
                 .thenReturn(Optional.of(client));
 
 
-        // When
         Optional<Client> result =
                 clientService.findById(1L);
 
 
-
-        // Then
         assertThat(result)
-                .isPresent()
-                .contains(client);
+                .isPresent();
+
+
+        assertThat(result.get().getId())
+                .isEqualTo(1L);
 
 
         verify(clientRepository)
@@ -129,38 +136,33 @@ class ClientServiceTest {
 
 
 
-
     /**
-     * Vérifie l'enregistrement d'un nouveau client.
+     * Vérifie l'enregistrement d'un client.
      */
     @Test
     void shouldSaveClient() {
 
 
-        // Given
         when(clientRepository.save(client))
                 .thenReturn(client);
 
 
-
-        // When
-        Client savedClient =
+        Client result =
                 clientService.save(client);
 
 
+        assertThat(result)
+                .isNotNull();
 
-        // Then
-        assertThat(savedClient)
-                .isNotNull()
-                .isEqualTo(client);
 
+        assertThat(result.getEmail())
+                .isEqualTo("jeremy.service@test.com");
 
 
         verify(clientRepository)
                 .save(client);
 
     }
-
 
 
 
@@ -171,16 +173,12 @@ class ClientServiceTest {
     void shouldDeleteClient() {
 
 
-        // When
         clientService.deleteById(1L);
 
 
-
-        // Then
         verify(clientRepository)
                 .deleteById(1L);
 
     }
-
 
 }
