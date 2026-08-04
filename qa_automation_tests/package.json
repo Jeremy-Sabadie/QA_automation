@@ -7,8 +7,21 @@
     "report": "playwright show-report"
   },
   "devDependencies": {
-    "@playwright/test": "1.62.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^24.3.0",
     "typescript": "^7.0.2"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1",
+    "playwright-core": "^1.62.1",
+    "undici-types": "^7.10.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

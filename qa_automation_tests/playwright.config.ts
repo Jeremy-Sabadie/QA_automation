@@ -1,63 +1,34 @@
 import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Configuration Playwright
- *
- * Tests E2E QA Automation
- */
-
 export default defineConfig({
-  /**
-   * Dossier des tests
-   */
   testDir: "./tests",
 
-  /**
-   * Les tests CRUD utilisent la même base de données.
-   * On désactive le parallélisme pour éviter
-   * les conflits entre Create/Delete/Update.
-   */
-  fullyParallel: false,
+  timeout: 30 * 1000,
 
-  /**
-   * Empêche les test.only oubliés en CI
-   */
-  forbidOnly: !!process.env.CI,
-
-  /**
-   * Retry uniquement en CI
-   */
-  retries: process.env.CI ? 2 : 0,
-
-  /**
-   * Un seul worker pour garantir
-   * l'indépendance des scénarios CRUD
-   */
-  workers: 1,
-
-  /**
-   * Rapport HTML
-   */
-  reporter: "html",
-
-  /**
-   * Configuration commune
-   */
-  use: {
-    /**
-     * URL Angular
-     */
-    baseURL: "http://127.0.0.1:4200",
-
-    /**
-     * Trace en cas de retry
-     */
-    trace: "on-first-retry",
+  expect: {
+    timeout: 5000,
   },
 
-  /**
-   * Navigateurs testés
-   */
+  fullyParallel: true,
+
+  forbidOnly: !!process.env.CI,
+
+  retries: process.env.CI ? 2 : 0,
+
+  workers: process.env.CI ? 1 : undefined,
+
+  reporter: [["html"], ["list"]],
+
+  use: {
+    baseURL: process.env.FRONTEND_URL ?? "http://localhost:4200",
+
+    trace: "on-first-retry",
+
+    screenshot: "only-on-failure",
+
+    video: "retain-on-failure",
+  },
+
   projects: [
     {
       name: "chromium",
@@ -80,10 +51,4 @@ export default defineConfig({
       },
     },
   ],
-
-  /**
-   * Serveur Angular lancé manuellement
-   *
-   * npm start
-   */
 });
