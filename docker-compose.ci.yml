@@ -1,0 +1,99 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: qa-mariadb-ci
+
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: qa_automation
+      MARIADB_USER: qa_user
+      MARIADB_PASSWORD: qa_password
+
+    volumes:
+      - mariadb_ci_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test:
+        - CMD
+        - healthcheck.sh
+        - --connect
+        - --innodb_initialized
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./qa_automation_backend/qa_automation_backend
+      dockerfile: Dockerfile
+
+    container_name: qa-backend-ci
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/qa_automation
+      SPRING_DATASOURCE_USERNAME: qa_user
+      SPRING_DATASOURCE_PASSWORD: qa_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_OPEN_IN_VIEW: "false"
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl --fail --silent http://localhost:8080/api/clients > /dev/null || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./qa_automation_frontend
+      dockerfile: Dockerfile
+
+    container_name: qa-frontend-ci
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -qO- http://localhost/ > /dev/null || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  tests:
+    build:
+      context: ./qa_automation_tests
+      dockerfile: Dockerfile
+
+    container_name: qa-tests-ci
+
+    environment:
+      CI: "true"
+      FRONTEND_URL: http://frontend
+      BACKEND_URL: http://backend:8080
+
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+
+    command: npx playwright test
+
+volumes:
+  mariadb_ci_data:
