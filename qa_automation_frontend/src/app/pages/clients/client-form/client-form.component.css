@@ -1,0 +1,157 @@
+.container {
+
+  max-width: 700px;
+
+  margin: 40px auto;
+
+  padding: 30px;
+
+  background: white;
+
+  border-radius: 10px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+}
+
+
+
+h1 {
+
+  margin-bottom: 30px;
+
+  color: #1f2937;
+
+}
+
+
+
+form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+
+}
+
+
+
+.form-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+label {
+
+  font-weight: 600;
+
+  margin-bottom: 5px;
+
+}
+
+
+
+input {
+
+  padding: 12px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 6px;
+
+  font-size: 15px;
+
+}
+
+
+
+input:focus {
+
+  outline: none;
+
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, .2);
+
+}
+
+
+
+.actions {
+
+  display: flex;
+
+  gap: 15px;
+
+  margin-top: 20px;
+
+}
+
+
+
+button {
+
+  padding: 12px 25px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+}
+
+
+
+.btn-save {
+
+  background: #2563eb;
+
+  color: white;
+
+}
+
+
+
+.btn-save:hover {
+
+  background: #1d4ed8;
+
+}
+
+
+
+.btn-save:disabled {
+
+  background: #9ca3af;
+
+  cursor: not-allowed;
+
+}
+
+
+
+.btn-cancel {
+
+  background: #6b7280;
+
+  color: white;
+
+}
+
+
+
+.btn-cancel:hover {
+
+  background: #4b5563;
+
+}

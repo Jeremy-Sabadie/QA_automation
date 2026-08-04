@@ -1,0 +1,127 @@
+<section class="container">
+
+
+  <header>
+
+    <h1>
+      Gestion clients
+    </h1>
+
+
+    <button class="btn btn-primary" (click)="addClient()">
+
+      + Ajouter client
+
+    </button>
+
+
+  </header>
+
+
+
+
+  <div *ngIf="loading">
+
+    Chargement...
+
+  </div>
+
+
+
+  <table *ngIf="!loading" class="table">
+
+
+    <thead>
+
+      <tr>
+
+        <th>ID</th>
+
+        <th>Nom</th>
+
+        <th>Email</th>
+
+        <th>Téléphone</th>
+
+        <th>Ville</th>
+
+        <th>Actions</th>
+
+      </tr>
+
+    </thead>
+
+
+
+    <tbody>
+
+
+      <tr *ngFor="let client of clients">
+
+
+        <td>
+          {{client.id}}
+        </td>
+
+
+        <td>
+
+          {{client.firstName}}
+          {{client.lastName}}
+
+        </td>
+
+
+        <td>
+
+          {{client.email}}
+
+        </td>
+
+
+        <td>
+
+          {{client.phone}}
+
+        </td>
+
+
+        <td>
+
+          {{client.city}}
+
+        </td>
+
+
+
+        <td>
+
+
+          <button class="edit" (click)="editClient(client)">
+
+            Modifier
+
+          </button>
+
+
+
+          <button class="delete" (click)="deleteClient(client.id)">
+
+            Supprimer
+
+          </button>
+
+
+        </td>
+
+
+      </tr>
+
+
+    </tbody>
+
+
+  </table>
+
+
+</section>

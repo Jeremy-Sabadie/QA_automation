@@ -1,0 +1,56 @@
+<h1>
+
+  {{editMode ? 'Modifier client':'Ajouter client'}}
+
+</h1>
+
+
+<form [formGroup]="form" (ngSubmit)="save()">
+
+
+
+  <input placeholder="Prénom" formControlName="firstName">
+
+
+
+  <input placeholder="Nom" formControlName="lastName">
+
+
+
+  <input placeholder="Email" formControlName="email">
+
+
+
+  <input placeholder="Téléphone" formControlName="phone">
+
+
+
+  <input placeholder="Adresse" formControlName="address">
+
+
+
+  <input placeholder="Code postal" formControlName="postalCode">
+
+
+
+  <input placeholder="Ville" formControlName="city">
+
+
+
+  <button type="submit">
+
+    Enregistrer
+
+  </button>
+
+
+
+  <button type="button" (click)="cancel()">
+
+    Annuler
+
+  </button>
+
+
+
+</form>

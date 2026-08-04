@@ -1,0 +1,23 @@
+.app-header {
+  background: #1f2937;
+  color: white;
+  padding: 20px;
+}
+
+.app-header h1 {
+  margin: 0 0 15px 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  padding: 20px;
+}
