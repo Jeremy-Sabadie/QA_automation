@@ -1,12 +1,15 @@
 import { APIRequestContext } from "@playwright/test";
+import { config } from "../config/environment";
+
+const CLIENT_API = `${config.backendUrl}/api/clients`;
 
 export async function ensureClientExists(request: APIRequestContext) {
-  const response = await request.get("http://localhost:8080/api/clients");
+  const response = await request.get(CLIENT_API);
 
   const clients = await response.json();
 
   if (clients.length === 0) {
-    await request.post("http://localhost:8080/api/clients", {
+    await request.post(CLIENT_API, {
       data: {
         firstName: "Jean",
         lastName: "Test",

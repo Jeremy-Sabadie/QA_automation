@@ -1,0 +1,33 @@
+services:
+
+  qa-mariadb:
+    image: mariadb:11
+    container_name: qa-mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: qa_automation
+      MYSQL_USER: qa_user
+      MYSQL_PASSWORD: qa_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+
+  qa-backend:
+    build:
+      context: ./qa_automation_backend
+    container_name: qa-backend
+    depends_on:
+      - qa-mariadb
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://qa-mariadb:3306/qa_automation
+      SPRING_DATASOURCE_USERNAME: qa_user
+      SPRING_DATASOURCE_PASSWORD: qa_password
+
+
+volumes:
+  mariadb_data:
