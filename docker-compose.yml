@@ -1,0 +1,26 @@
+services:
+
+  mariadb:
+    image: mariadb:11
+
+    container_name: qa-mariadb
+
+    environment:
+      MYSQL_DATABASE: qa_project
+      MYSQL_USER: qa_user
+      MYSQL_PASSWORD: qa_password
+      MYSQL_ROOT_PASSWORD: root_password
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./database/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+
+    restart: unless-stopped
+
+
+volumes:
+  mariadb_data:
