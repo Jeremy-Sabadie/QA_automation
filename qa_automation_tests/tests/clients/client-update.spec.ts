@@ -1,11 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { ClientListPage } from "../../pages/clients/ClientListPage";
+import { ensureClientExists } from "../utils/test-data";
 
 test.describe("Gestion des clients - Modification", () => {
   let clientListPage: ClientListPage;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, request }) => {
+    await ensureClientExists(request);
+
     clientListPage = new ClientListPage(page);
 
     await clientListPage.navigate();
@@ -14,13 +17,13 @@ test.describe("Gestion des clients - Modification", () => {
   });
 
   test("Modifier un client existant", async ({ page }) => {
-    const row = page.locator("tbody tr").first();
+    const row = clientListPage.clientRows.first();
 
     await expect(row).toBeVisible();
 
     await row
       .getByRole("button", {
-        name: /Modifier/i,
+        name: /modifier/i,
       })
       .click();
 
@@ -34,12 +37,12 @@ test.describe("Gestion des clients - Modification", () => {
 
     await page
       .getByRole("button", {
-        name: /Enregistrer/i,
+        name: /enregistrer/i,
       })
       .click();
 
     const confirmButton = page.getByRole("button", {
-      name: /Oui|Confirmer/i,
+      name: /oui|confirmer/i,
     });
 
     if (await confirmButton.isVisible().catch(() => false)) {
@@ -47,13 +50,13 @@ test.describe("Gestion des clients - Modification", () => {
     }
 
     await page.waitForURL("**/clients", {
-      timeout: 10000,
+      timeout: 10_000,
     });
 
     await page.reload();
 
     await expect(page.getByText("JeanModifie")).toBeVisible({
-      timeout: 10000,
+      timeout: 10_000,
     });
   });
 });
