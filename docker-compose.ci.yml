@@ -45,7 +45,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - curl --fail --silent http://localhost:8080/api/clients > /dev/null || exit 1
+        - curl --fail --silent http://127.0.0.1:8080/api/clients > /dev/null || exit 1
       interval: 5s
       timeout: 5s
       retries: 30
@@ -65,11 +65,11 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - wget -qO- http://localhost/ > /dev/null || exit 1
+        - wget -qO- http://127.0.0.1/ > /dev/null || exit 1
       interval: 5s
       timeout: 5s
-      retries: 20
-      start_period: 10s
+      retries: 30
+      start_period: 20s
 
   tests:
     build:
