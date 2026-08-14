@@ -1,0 +1,204 @@
+{
+  "info": {
+    "_postman_id": "qa-automation-api-collection",
+    "name": "QA Automation API",
+    "description": "Collection de tests API automatisés du projet QA Automation. Elle couvre les principales opérations CRUD de gestion des clients.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "GET - Liste des clients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients"]
+            },
+            "description": "Récupère l'ensemble des clients."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La réponse est au format JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La réponse contient une liste\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST - Créer un client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Newman\",\n  \"lastName\": \"Test\",\n  \"email\": \"newman{{$timestamp}}@test.com\",\n  \"phone\": \"0600000000\",\n  \"address\": \"1 rue des Tests\",\n  \"postalCode\": \"33000\",\n  \"city\": \"Bordeaux\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients"]
+            },
+            "description": "Crée un client de test utilisé par les requêtes suivantes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Création réussie\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"La réponse est JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test(\"Le client possède un identifiant\", function () {",
+                  "    pm.expect(body.id).to.exist;",
+                  "});",
+                  "",
+                  "pm.environment.set(\"clientId\", body.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET - Consulter le client créé",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/{{clientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "{{clientId}}"]
+            },
+            "description": "Vérifie que le client créé précédemment peut être récupéré par son identifiant."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test(\"L'identifiant correspond au client créé\", function () {",
+                  "    pm.expect(String(body.id)).to.eql(String(pm.environment.get(\"clientId\")));",
+                  "});",
+                  "",
+                  "pm.test(\"Le nom du client est correct\", function () {",
+                  "    pm.expect(body.firstName).to.eql(\"Newman\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT - Modifier le client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"NewmanModifie\",\n  \"lastName\": \"Test\",\n  \"email\": \"newman.modified{{$timestamp}}@test.com\",\n  \"phone\": \"0611111111\",\n  \"address\": \"2 rue des Tests\",\n  \"postalCode\": \"33000\",\n  \"city\": \"Bordeaux\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/{{clientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "{{clientId}}"]
+            },
+            "description": "Modifie le client créé pendant la campagne."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Modification réussie\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200 && pm.response.text()) {",
+                  "    const body = pm.response.json();",
+                  "",
+                  "    pm.test(\"Le prénom a été modifié\", function () {",
+                  "        pm.expect(body.firstName).to.eql(\"NewmanModifie\");",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE - Supprimer le client",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/{{clientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clients", "{{clientId}}"]
+            },
+            "description": "Supprime le client créé par la campagne afin de nettoyer les données de test."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Suppression réussie\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.environment.unset(\"clientId\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

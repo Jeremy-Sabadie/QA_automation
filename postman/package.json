@@ -1,0 +1,12 @@
+{
+  "name": "qa-automation-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tests API Postman/Newman du projet QA Automation",
+  "scripts": {
+    "test:api": "newman run collections/QA_Automation_API.postman_collection.json -e environments/local.postman_environment.json"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1"
+  }
+}

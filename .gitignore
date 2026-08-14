@@ -3,3 +3,5 @@
 # Playwright reports
 playwright-report/
 test-results/
+postman/node_modules/
+postman/node_modules/
