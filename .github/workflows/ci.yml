@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 jobs:
-  e2e-tests:
-    name: Docker Compose + Playwright
+  qa-tests:
+    name: API Newman + E2E Playwright
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -38,12 +38,43 @@ jobs:
       - name: Valider Docker Compose
         run: docker compose -f docker-compose.ci.yml config
 
-      - name: Construire et lancer la stack avec les tests
+      - name: Construire les images Docker
+        run: docker compose -f docker-compose.ci.yml build
+
+      - name: Démarrer la stack applicative
         run: |
-          docker compose -f docker-compose.ci.yml up \
-            --build \
-            --abort-on-container-exit \
-            --exit-code-from tests
+          docker compose -f docker-compose.ci.yml up -d mariadb backend frontend
+
+      - name: Attendre que le backend soit opérationnel
+        run: |
+          echo "Attente du backend..."
+
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:8080/api/clients > /dev/null; then
+              echo "Backend opérationnel"
+              exit 0
+            fi
+
+            echo "Backend non disponible - tentative $i/30"
+            sleep 5
+          done
+
+          echo "Le backend n'est pas devenu disponible à temps"
+          docker compose -f docker-compose.ci.yml logs --no-color
+          exit 1
+
+      # Tests API Postman / Newman
+      - name: Installer les dépendances Newman
+        working-directory: postman
+        run: npm ci
+
+      - name: Exécuter les tests API Newman
+        working-directory: postman
+        run: npm run test:api
+
+      # Tests E2E Playwright
+      - name: Exécuter les tests E2E Playwright
+        run: docker compose -f docker-compose.ci.yml run --rm tests
 
       - name: Afficher les logs Docker en cas d'échec
         if: failure()

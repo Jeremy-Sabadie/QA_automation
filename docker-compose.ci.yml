@@ -1,4 +1,5 @@
 services:
+
   mariadb:
     image: mariadb:11
     container_name: qa-mariadb-ci
@@ -30,6 +31,9 @@ services:
       dockerfile: Dockerfile
 
     container_name: qa-backend-ci
+
+    ports:
+      - "8080:8080"
 
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/qa_automation
