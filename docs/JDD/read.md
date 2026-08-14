@@ -44,10 +44,22 @@ Les données spécifiques aux tests QA sont documentées dans ce répertoire.
 Les JDD peuvent être utilisés :
 
 - manuellement lors des tests fonctionnels ;
-- dans les tests API Playwright ;
+- dans les collections Postman et les tests API automatisés avec Newman ;
 - dans les tests E2E Playwright ;
 - dans les fixtures Playwright ;
 - pour reproduire un scénario lors de l'analyse d'une anomalie.
+
+Les tests API du projet sont définis dans une collection Postman et exécutés en ligne de commande avec Newman.
+
+La collection couvre notamment les opérations CRUD de l'API Clients :
+
+- consultation de la liste des clients ;
+- création d'un client ;
+- consultation du client créé ;
+- modification du client ;
+- suppression du client.
+
+Ces tests API sont exécutables localement et sont également intégrés au pipeline CI GitHub Actions.
 
 Les données nécessaires à un scénario doivent être identifiées dans le cas de test correspondant.
 
