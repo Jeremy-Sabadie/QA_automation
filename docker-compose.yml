@@ -14,10 +14,9 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
 
-
   qa-backend:
     build:
-      context: ./qa_automation_backend
+      context: ./qa_automation_backend/qa_automation_backend
     container_name: qa-backend
     depends_on:
       - qa-mariadb
@@ -27,7 +26,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://qa-mariadb:3306/qa_automation
       SPRING_DATASOURCE_USERNAME: qa_user
       SPRING_DATASOURCE_PASSWORD: qa_password
-
 
 volumes:
   mariadb_data:
