@@ -5,10 +5,10 @@ services:
     container_name: qa-mariadb-ci
 
     environment:
-      MARIADB_ROOT_PASSWORD: root_password
-      MARIADB_DATABASE: qa_automation
-      MARIADB_USER: qa_user
-      MARIADB_PASSWORD: qa_password
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
 
     volumes:
       - mariadb_ci_data:/var/lib/mysql
@@ -36,9 +36,9 @@ services:
       - "8080:8080"
 
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/qa_automation
-      SPRING_DATASOURCE_USERNAME: qa_user
-      SPRING_DATASOURCE_PASSWORD: qa_password
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_OPEN_IN_VIEW: "false"
 

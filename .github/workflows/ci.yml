@@ -6,6 +6,7 @@ on:
       - main
       - "feature/**"
       - "fix/**"
+      - "chore/**"
 
   pull_request:
 
@@ -19,6 +20,12 @@ jobs:
     name: API Newman + E2E Playwright
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    env:
+      MARIADB_DATABASE: qa_automation
+      MARIADB_USER: ${{ secrets.MARIADB_USER }}
+      MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
+      MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
 
     steps:
       - name: Récupérer le dépôt

@@ -1,7 +1,12 @@
+# IDE
 **/.vscode/
+
+# Environment variables / secrets
+.env
 
 # Playwright reports
 playwright-report/
 test-results/
-postman/node_modules/
+
+# Node dependencies
 postman/node_modules/
