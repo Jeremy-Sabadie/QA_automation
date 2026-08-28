@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+import Swal from 'sweetalert2';
+
 import { ClientService } from '../../services/client.service';
 import { Client } from '../../models/client';
 
@@ -65,7 +67,7 @@ export class ClientsComponent implements OnInit {
   }
 
   /**
-   * Suppression client
+   * Suppression client avec confirmation
    */
   deleteClient(id: number | undefined): void {
     if (id === undefined) {
@@ -73,14 +75,29 @@ export class ClientsComponent implements OnInit {
       return;
     }
 
-    this.clientService.deleteClient(id).subscribe({
-      next: () => {
-        this.loadClients();
-      },
+    Swal.fire({
+      title: 'Supprimer ce client ?',
+      text: 'Cette action est irréversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clientService.deleteClient(id).subscribe({
+          next: () => {
+            Swal.fire('Succès', 'Client supprimé', 'success');
 
-      error: (error) => {
-        console.error('Erreur suppression client', error);
-      },
+            this.loadClients();
+          },
+
+          error: (error) => {
+            console.error('Erreur suppression client', error);
+
+            Swal.fire('Erreur', 'Suppression impossible', 'error');
+          },
+        });
+      }
     });
   }
 }
