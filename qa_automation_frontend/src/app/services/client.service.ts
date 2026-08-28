@@ -8,8 +8,8 @@ import { Client } from '../models/client';
   providedIn: 'root',
 })
 export class ClientService {
-  private readonly apiUrl = '/api/clients';
-
+  private readonly apiUrl =
+    'https://qa-automation-js03.onrender.com/api/clients';
   constructor(private readonly http: HttpClient) {}
 
   getClients(): Observable<Client[]> {
