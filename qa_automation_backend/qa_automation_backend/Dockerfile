@@ -1,13 +1,17 @@
-﻿FROM eclipse-temurin:21-jre
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
+﻿FROM eclipse-temurin:21-jdk AS build
 
 WORKDIR /app
 
-COPY target/*.jar app.jar
+COPY . .
+
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
