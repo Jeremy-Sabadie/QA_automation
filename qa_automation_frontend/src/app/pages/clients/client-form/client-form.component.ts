@@ -17,13 +17,9 @@ import { Client } from '../../../models/client';
 
 @Component({
   selector: 'app-client-form',
-
   standalone: true,
-
   imports: [CommonModule, ReactiveFormsModule],
-
   templateUrl: './client-form.component.html',
-
   styleUrl: './client-form.component.css',
 })
 export class ClientFormComponent implements OnInit {
@@ -33,13 +29,12 @@ export class ClientFormComponent implements OnInit {
 
   clientId!: number;
 
+  showValidation = false;
+
   constructor(
     private readonly fb: FormBuilder,
-
     private readonly clientService: ClientService,
-
     private readonly router: Router,
-
     private readonly route: ActivatedRoute,
   ) {}
 
@@ -49,7 +44,14 @@ export class ClientFormComponent implements OnInit {
 
       lastName: ['', Validators.required],
 
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(/^[^\s@]+@[^\s@]+\.com$/i),
+        ],
+      ],
 
       phone: [''],
 
@@ -87,13 +89,21 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
+  showRequiredFields(): void {
+    if (this.form.invalid) {
+      this.showValidation = true;
+    }
+  }
+
   save(): void {
     if (this.form.invalid) {
+      this.showValidation = true;
+
+      this.form.markAllAsTouched();
+
       Swal.fire(
         'Formulaire incomplet',
-
-        'Veuillez remplir les champs obligatoires',
-
+        'Veuillez renseigner correctement les champs obligatoires',
         'warning',
       );
 
@@ -110,34 +120,19 @@ export class ClientFormComponent implements OnInit {
   }
 
   create(client: Client): void {
-    this.clientService
-      .createClient(client)
+    this.clientService.createClient(client).subscribe({
+      next: () => {
+        Swal.fire('Succès', 'Client ajouté', 'success');
 
-      .subscribe({
-        next: () => {
-          Swal.fire(
-            'Succès',
+        this.router.navigate(['/clients']);
+      },
 
-            'Client ajouté',
+      error: (err) => {
+        console.error(err);
 
-            'success',
-          );
-
-          this.router.navigate(['/clients']);
-        },
-
-        error: (err) => {
-          console.error(err);
-
-          Swal.fire(
-            'Erreur',
-
-            'Création impossible',
-
-            'error',
-          );
-        },
-      });
+        Swal.fire('Erreur', 'Création impossible', 'error');
+      },
+    });
   }
 
   confirmUpdate(client: Client): void {
@@ -159,35 +154,19 @@ export class ClientFormComponent implements OnInit {
   }
 
   update(client: Client): void {
-    this.clientService
+    this.clientService.updateClient(this.clientId, client).subscribe({
+      next: () => {
+        Swal.fire('Succès', 'Client modifié', 'success');
 
-      .updateClient(this.clientId, client)
+        this.router.navigate(['/clients']);
+      },
 
-      .subscribe({
-        next: () => {
-          Swal.fire(
-            'Succès',
+      error: (err) => {
+        console.error(err);
 
-            'Client modifié',
-
-            'success',
-          );
-
-          this.router.navigate(['/clients']);
-        },
-
-        error: (err) => {
-          console.error(err);
-
-          Swal.fire(
-            'Erreur',
-
-            'Modification impossible',
-
-            'error',
-          );
-        },
-      });
+        Swal.fire('Erreur', 'Modification impossible', 'error');
+      },
+    });
   }
 
   cancel(): void {

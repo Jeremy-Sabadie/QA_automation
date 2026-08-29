@@ -1,118 +1,120 @@
-<div class="container">
+<h1>
+  {{ editMode ? 'Modifier client' : 'Ajouter client' }}
+</h1>
 
-  <h1>
-    {{ editMode ? 'Modifier un client' : 'Ajouter un client' }}
-  </h1>
+<p class="required-info">
+  <span class="required">*</span> Champs obligatoires
+</p>
 
+<form [formGroup]="form" (ngSubmit)="save()">
 
-  <form [formGroup]="form" (ngSubmit)="save()">
+  <div class="field">
 
+    <label for="firstName">
+      Prénom <span class="required">*</span>
+    </label>
 
-    <div class="form-group">
+    <input id="firstName" type="text" placeholder="Prénom" formControlName="firstName"
+      [class.invalid]="showValidation && form.get('firstName')?.invalid">
 
-      <label>
-        Prénom
-      </label>
+    <small class="error" *ngIf="showValidation && form.get('firstName')?.hasError('required')">
+      Le prénom est obligatoire.
+    </small>
 
-      <input type="text" formControlName="firstName">
-
-    </div>
-
-
-
-    <div class="form-group">
-
-      <label>
-        Nom
-      </label>
-
-      <input type="text" formControlName="lastName">
-
-    </div>
+  </div>
 
 
+  <div class="field">
 
-    <div class="form-group">
+    <label for="lastName">
+      Nom <span class="required">*</span>
+    </label>
 
-      <label>
-        Email
-      </label>
+    <input id="lastName" type="text" placeholder="Nom" formControlName="lastName"
+      [class.invalid]="showValidation && form.get('lastName')?.invalid">
 
-      <input type="email" formControlName="email">
+    <small class="error" *ngIf="showValidation && form.get('lastName')?.hasError('required')">
+      Le nom est obligatoire.
+    </small>
 
-    </div>
-
-
-
-    <div class="form-group">
-
-      <label>
-        Téléphone
-      </label>
-
-      <input type="text" formControlName="phone">
-
-    </div>
+  </div>
 
 
+  <div class="field">
 
-    <div class="form-group">
+    <label for="email">
+      Email <span class="required">*</span>
+    </label>
 
-      <label>
-        Adresse
-      </label>
+    <input id="email" type="email" placeholder="Email" formControlName="email"
+      [class.invalid]="showValidation && form.get('email')?.invalid">
 
-      <input type="text" formControlName="address">
+    <small class="error" *ngIf="showValidation && form.get('email')?.hasError('required')">
+      L'email est obligatoire.
+    </small>
 
-    </div>
+    <small class="error" *ngIf="
+        showValidation &&
+        !form.get('email')?.hasError('required') &&
+        form.get('email')?.invalid
+      ">
+      L'adresse email doit être valide et se terminer par .com.
+    </small>
 
-
-
-    <div class="form-group">
-
-      <label>
-        Code postal
-      </label>
-
-      <input type="text" formControlName="postalCode">
-
-    </div>
-
-
-
-    <div class="form-group">
-
-      <label>
-        Ville
-      </label>
-
-      <input type="text" formControlName="city">
-
-    </div>
+  </div>
 
 
+  <div class="field">
 
-    <div class="actions">
+    <label for="phone">
+      Téléphone
+    </label>
 
+    <input id="phone" type="text" placeholder="Téléphone" formControlName="phone">
 
-      <button type="submit" class="btn-save" [disabled]="form.invalid">
-
-        Enregistrer
-
-      </button>
-
-
-
-      <button type="button" class="btn-cancel" (click)="cancel()">
-
-        Annuler
-
-      </button>
+  </div>
 
 
-    </div>
+  <div class="field">
+
+    <label for="address">
+      Adresse
+    </label>
+
+    <input id="address" type="text" placeholder="Adresse" formControlName="address">
+
+  </div>
 
 
-  </form>
+  <div class="field">
 
-</div>
+    <label for="postalCode">
+      Code postal
+    </label>
+
+    <input id="postalCode" type="text" placeholder="Code postal" formControlName="postalCode">
+
+  </div>
+
+
+  <div class="field">
+
+    <label for="city">
+      Ville
+    </label>
+
+    <input id="city" type="text" placeholder="Ville" formControlName="city">
+
+  </div>
+
+
+  <button type="submit" class="save-button" [class.disabled-look]="form.invalid" (mouseenter)="showRequiredFields()">
+    Enregistrer
+  </button>
+
+
+  <button type="button" (click)="cancel()">
+    Annuler
+  </button>
+
+</form>
