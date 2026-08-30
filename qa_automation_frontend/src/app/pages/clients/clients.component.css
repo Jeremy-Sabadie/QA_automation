@@ -1,44 +1,147 @@
-.table {
+.container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  overflow-x: hidden;
+}
 
+.table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-
 }
 
-
-
 .table th {
-
   background: #222;
   color: white;
   padding: 12px;
   border: 1px solid #ccc;
   text-align: left;
-
 }
-
-
 
 .table td {
-
   padding: 12px;
   border: 1px solid #ccc;
-
 }
-
-
 
 .table tr:nth-child(even) {
-
   background-color: #f8f9fa;
-
 }
 
-
-
 .table tr:hover {
-
   background-color: #eef2ff;
+}
 
+.edit,
+.delete {
+  margin-right: 6px;
+}
+
+/* =========================
+   Téléphone
+   ========================= */
+
+@media (max-width: 768px) {
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .container header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .container header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .container header button {
+    width: 100%;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table {
+    border: none;
+    margin-top: 15px;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tr {
+    margin: 0 0 12px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+  }
+
+  .table tr:nth-child(even) {
+    background: white;
+  }
+
+  .table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 8px 2px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .table td:nth-child(1)::before {
+    content: "ID : ";
+    font-weight: bold;
+  }
+
+  .table td:nth-child(2)::before {
+    content: "Nom : ";
+    font-weight: bold;
+  }
+
+  .table td:nth-child(3)::before {
+    content: "Email : ";
+    font-weight: bold;
+  }
+
+  .table td:nth-child(4)::before {
+    content: "Téléphone : ";
+    font-weight: bold;
+  }
+
+  .table td:nth-child(5)::before {
+    content: "Ville : ";
+    font-weight: bold;
+  }
+
+  .table td:last-child {
+    border-bottom: none;
+    padding-top: 10px;
+  }
+
+  .edit,
+  .delete {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 5px 0;
+  }
 }

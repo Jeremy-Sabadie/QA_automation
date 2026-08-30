@@ -33,6 +33,8 @@ export class ClientFormComponent implements OnInit {
 
   clientId?: number;
 
+  showValidation = false;
+
   constructor(
     private fb: FormBuilder,
 
@@ -49,7 +51,14 @@ export class ClientFormComponent implements OnInit {
 
       lastName: ['', Validators.required],
 
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(/^[^\s@]+@[^\s@]+\.com$/i),
+        ],
+      ],
 
       phone: [''],
 
@@ -81,8 +90,24 @@ export class ClientFormComponent implements OnInit {
     }
   }
 
+  showRequiredFields(): void {
+    if (this.form.invalid) {
+      this.showValidation = true;
+    }
+  }
+
   save() {
     if (this.form.invalid) {
+      this.showValidation = true;
+
+      this.form.markAllAsTouched();
+
+      Swal.fire(
+        'Formulaire incomplet',
+        'Veuillez renseigner correctement les champs obligatoires',
+        'warning',
+      );
+
       return;
     }
 
@@ -99,13 +124,11 @@ export class ClientFormComponent implements OnInit {
         confirmButtonText: 'Oui',
 
         cancelButtonText: 'Annuler',
-      })
-
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.update(client);
-          }
-        });
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.update(client);
+        }
+      });
     } else {
       this.create(client);
     }
@@ -113,7 +136,6 @@ export class ClientFormComponent implements OnInit {
 
   create(client: Client) {
     this.service
-
       .createClient(client)
 
       .subscribe(() => {
@@ -131,7 +153,6 @@ export class ClientFormComponent implements OnInit {
 
   update(client: Client) {
     this.service
-
       .updateClient(this.clientId!, client)
 
       .subscribe(() => {

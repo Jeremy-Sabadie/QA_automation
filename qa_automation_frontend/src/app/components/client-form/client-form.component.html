@@ -1,56 +1,11 @@
-<h1>
+<label>
+  Prénom <span class="required">*</span>
+</label>
 
-  {{editMode ? 'Modifier client':'Ajouter client'}}
+<label>
+  Nom <span class="required">*</span>
+</label>
 
-</h1>
-
-
-<form [formGroup]="form" (ngSubmit)="save()">
-
-
-
-  <input placeholder="Prénom" formControlName="firstName">
-
-
-
-  <input placeholder="Nom" formControlName="lastName">
-
-
-
-  <input placeholder="Email" formControlName="email">
-
-
-
-  <input placeholder="Téléphone" formControlName="phone">
-
-
-
-  <input placeholder="Adresse" formControlName="address">
-
-
-
-  <input placeholder="Code postal" formControlName="postalCode">
-
-
-
-  <input placeholder="Ville" formControlName="city">
-
-
-
-  <button type="submit">
-
-    Enregistrer
-
-  </button>
-
-
-
-  <button type="button" (click)="cancel()">
-
-    Annuler
-
-  </button>
-
-
-
-</form>
+<label>
+  Email <span class="required">*</span>
+</label>
